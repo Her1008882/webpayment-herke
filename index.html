@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Pembayaran QR</title>
+    <style>
+        /* Reset & Variabel */
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --primary-color: #0ea5e9; /* Sky Blue */
+            --primary-hover: #0284c7;
+            --copy-bg: #f1f5f9;
+            --copy-hover: #e2e8f0;
+            --dana-color: #0088cc;
+            --gopay-color: #00aa00;
+            --active-bg: #f0f9ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Container Utama */
+        .payment-container {
+            width: 100%;
+            max-width: 420px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Header */
+        .payment-header {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .payment-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .payment-header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Konten Utama */
+        .payment-content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Judul Pilihan */
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        /* Metode Pembayaran */
+        .payment-method {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .method-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .method-card:hover {
+            border-color: var(--primary-color);
+        }
+
+        .method-card.active {
+            border-color: var(--primary-color);
+            background-color: var(--active-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.15);
+        }
+
+        /* QR Placeholder */
+        .qr-placeholder {
+            width: 160px;
+            height: 160px;
+            background-color: #f8fafc;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .method-card.active .qr-placeholder {
+            border-style: solid;
+        }
+
+        .dana-card .qr-placeholder {
+            border-color: var(--dana-color);
+            color: var(--dana-color);
+            background-color: #e0f2fe;
+        }
+
+        .gopay-card .qr-placeholder {
+            border-color: var(--gopay-color);
+            color: var(--gopay-color);
+            background-color: #dcfce7;
+        }
+        
+        .method-card.active.dana-card .qr-placeholder { background-color: #cffafe; }
+        .method-card.active.gopay-card .qr-placeholder { background-color: #bbf7d0; }
+
+        /* Info Metode */
+        .method-info {
+            text-align: center;
+            width: 100%;
+        }
+
+        .method-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .dana-card .method-name { color: var(--dana-color); }
+        .gopay-card .method-name { color: var(--gopay-color); }
+
+        .method-details {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        /* Tombol Salin */
+        .copy-btn {
+            background-color: var(--copy-bg);
+            color: var(--text-main);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--copy-hover);
+        }
+
+        .copy-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Instruksi */
+        .instructions {
+            background-color: var(--bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .instructions strong {
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Notifikasi Toast */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="payment-container">
+        <div class="payment-header">
+            <h1>Pembayaran</h1>
+            <p>Pilih metode & scan QR Code</p>
+        </div>
+
+        <div class="payment-content">
+            
+            <div class="section-title">Pilih Metode Pembayaran</div>
+
+            <!-- METODE GOPAY -->
+            <div class="payment-method">
+                <div class="method-card gopay-card" id="gopay-method" onclick="selectMethod('gopay')">
+                    <div class="qr-placeholder">
+                        QR GOPAY<br>(Scan Disini)
+                    </div>
+                    <div class="method-info">
+                        <div class="method-name">GOPAY</div>
+                        <div class="method-details">
+                            No: 085298529828<br>
+                            Atas Nama: Her
+                        </div>
+                        <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('085298529828', 'Nom
